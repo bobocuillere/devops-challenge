@@ -45,8 +45,7 @@ jobs:
           "
 
       - name: Upload .deb Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3  # Updated to v3
         with:
           name: prometheus-postgres-exporter-${{ matrix.debian_version }}.deb
           path: ./deb_build/${{ matrix.debian_version }}/*.deb
-
