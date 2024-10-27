@@ -28,10 +28,11 @@ jobs:
       - name: Build Docker image for Debian ${{ matrix.debian_version }}
         run: |
           docker build \
-            --file Dockerfile \  # Specify the Dockerfile location if in the root
+            --file docker/Dockerfile \  # Correct Dockerfile path
             --build-arg DEBIAN_VERSION=${{ matrix.debian_version }} \
             -t prometheus-postgres-exporter:${{ matrix.debian_version }} \
-            .
+            .  # Use . as the context if you are in the root of the repo
+
 
       - name: Run Container and Build .deb Package
         run: |
