@@ -1,0 +1,4 @@
+Talk about the monitoring for teh screenshots
+use fixed version for the images no the latest
+
+Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/run/desktop/mnt/host/wsl/docker-desktop-bind-mounts/Ubuntu-22.04/634aae14ddb08fbc9a4eea13b7ac2149f54a4b820438467dbc28c97842cf4df1" to rootfs at "/etc/alertmanager/alertmanager.yml": mount /run/desktop/mnt/host/wsl/docker-desktop-bind-mounts/Ubuntu-22.04/634aae14ddb08fbc9a4eea13b7ac2149f54a4b820438467dbc28c97842cf4df1:/etc/alertmanager/alertmanager.yml (via /proc/self/fd/6), flags: 0x5000: not a directory: unknown: Are you trying to mount a directory onto a file (or vice-versa)? Check if the specified host path exists and is the expected type

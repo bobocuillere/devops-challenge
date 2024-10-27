@@ -1,0 +1,51 @@
+name: Build .deb Package for prometheus-postgres-exporter
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        debian_version: [buster, bullseye, bookworm]  # Last three Debian versions
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Build Docker image for Debian ${{ matrix.debian_version }}
+        run: |
+          docker build \
+            --build-arg DEBIAN_VERSION=${{ matrix.debian_version }} \
+            -t prometheus-postgres-exporter:${{ matrix.debian_version }} \
+            .
+
+      - name: Package prometheus-postgres-exporter as .deb
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/workspace prometheus-postgres-exporter:${{ matrix.debian_version }} \
+            /bin/bash -c "
+            apt update &&
+            apt install -y dpkg-dev &&
+            mkdir -p /workspace/deb_build/${{ matrix.debian_version }} &&
+            cd /workspace/deb_build/${{ matrix.debian_version }} &&
+            # Commands to package prometheus-postgres-exporter as .deb
+            dpkg-deb --build /workspace/prometheus-postgres-exporter
+          "
+
+      - name: Upload .deb Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: prometheus-postgres-exporter-${{ matrix.debian_version }}.deb
+          path: ./deb_build/${{ matrix.debian_version }}/*.deb

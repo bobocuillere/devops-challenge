@@ -1,0 +1,21 @@
+FOR SCREENSHOT 1:
+
+The high and consistent 2xx status codes means that the application is generally serving successful requests, 
+but sometimes they are spikes in 4xx errors suggesting occasional client-side issues, possibly due to invalid inputs or authorization problems. 
+there are  peaks in 5xx errors around 8 PM, I think some server-side issues.
+
+-------------------
+
+In the different time metrics, Treatment Time and Queue Time change a lot, with Queue Time having spikes throughout the day. 
+This could mean that requests are occasionally piling up, which could be because of high traffic or limited resources. 
+Response and Connection Times also show some increases, which might means network or server latency issues during peak times.
+
+--------------------------------------------------------------------------------------------------
+
+FOR SCREENSHOT 2:
+
+I see high activity especially for consumers kfconspg-pgdb08 and kfconspg-pgdb09, with  peaks that can mean either backlogs or a new peak of processing activity.
+
+There is noticeable difference in metrics on the different Kafka partitions, which could means  an uneven load distribution among partitions. 
+This might need a better load balancing or some changes in Kafka.
+

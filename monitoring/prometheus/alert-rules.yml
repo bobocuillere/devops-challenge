@@ -1,0 +1,24 @@
+groups:
+  - name: system-alerts
+    rules:
+      # CPU Usage Alert
+      - alert: HighCpuUsage
+        expr: 100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[10m])) * 100) > 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU Usage Detected (instance {{ $labels.instance }})"
+          description: "CPU usage has been above 1% for the last 10 minutes on {{ $labels.instance }}."
+
+  - name: postgres-alerts
+    rules:
+      # PostgreSQL Active Connections Alert
+      - alert: PostgreSQLHighActiveConnections
+        expr: pg_stat_activity_count{datname="postgres"} > 0
+        for: 1s
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Active Connections on PostgreSQL (instance {{ $labels.instance }})"
+          description: "PostgreSQL has more than 0 active connections for over 1 second on instance {{ $labels.instance }}."

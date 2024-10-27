@@ -1,0 +1,10 @@
+---
+- name: package installation via apt
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: install emacs package
+      apt:
+        name: emacs
+        state: present
+        update_cache: yes
