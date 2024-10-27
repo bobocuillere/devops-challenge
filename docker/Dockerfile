@@ -17,7 +17,7 @@ ARG ARCHITECTURE=linux-amd64
 # Download prometheus-postgres-exporter for a specific version and architecture
 RUN wget https://github.com/prometheus-community/postgres_exporter/releases/download/v${EXPORTER_VERSION}/postgres_exporter-${EXPORTER_VERSION}.${ARCHITECTURE}.tar.gz && \
     tar -xzvf postgres_exporter-${EXPORTER_VERSION}.${ARCHITECTURE}.tar.gz && \
-    mv postgres_exporter /usr/local/bin/
+    mv postgres_exporter-${EXPORTER_VERSION}.${ARCHITECTURE}/postgres_exporter /usr/local/bin/
 
 # Build the .deb package
 CMD dpkg-deb --build /build prometheus-postgres-exporter.deb
