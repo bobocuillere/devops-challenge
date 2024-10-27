@@ -28,24 +28,20 @@ jobs:
       - name: Build Docker image for Debian ${{ matrix.debian_version }}
         run: |
           docker build \
+            --file Dockerfile \  # Specify the Dockerfile location if in the root
             --build-arg DEBIAN_VERSION=${{ matrix.debian_version }} \
             -t prometheus-postgres-exporter:${{ matrix.debian_version }} \
             .
 
-      - name: Package prometheus-postgres-exporter as .deb
+      - name: Run Container and Build .deb Package
         run: |
           docker run --rm -v ${{ github.workspace }}:/workspace prometheus-postgres-exporter:${{ matrix.debian_version }} \
             /bin/bash -c "
-            apt update &&
-            apt install -y dpkg-dev &&
-            mkdir -p /workspace/deb_build/${{ matrix.debian_version }} &&
-            cd /workspace/deb_build/${{ matrix.debian_version }} &&
-            # Commands to package prometheus-postgres-exporter as .deb
-            dpkg-deb --build /workspace/prometheus-postgres-exporter
+            dpkg-deb --build /workspace/prometheus-postgres-exporter-${{ matrix.debian_version }}.deb
           "
 
       - name: Upload .deb Artifact
-        uses: actions/upload-artifact@v3  # Updated to v3
+        uses: actions/upload-artifact@v3
         with:
           name: prometheus-postgres-exporter-${{ matrix.debian_version }}.deb
-          path: ./deb_build/${{ matrix.debian_version }}/*.deb
+          path: ./prometheus-postgres-exporter-${{ matrix.debian_version }}.deb
