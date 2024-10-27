@@ -7,10 +7,17 @@ FROM debian:${DEBIAN_VERSION}
 RUN apt-get update && \
     apt-get install -y dpkg-dev build-essential wget
 
+# Set work directory
 WORKDIR /build
 
-# Download prometheus-postgres-exporter
-RUN wget https://github.com/prometheus-community/postgres_exporter/releases/latest/download/postgres_exporter
+# Define the version and architecture
+ARG EXPORTER_VERSION=0.15.0
+ARG ARCHITECTURE=linux-amd64
+
+# Download prometheus-postgres-exporter for a specific version and architecture
+RUN wget https://github.com/prometheus-community/postgres_exporter/releases/download/v${EXPORTER_VERSION}/postgres_exporter-${EXPORTER_VERSION}.${ARCHITECTURE}.tar.gz && \
+    tar -xzvf postgres_exporter-${EXPORTER_VERSION}.${ARCHITECTURE}.tar.gz && \
+    mv postgres_exporter /usr/local/bin/
 
 # Build the .deb package
 CMD dpkg-deb --build /build prometheus-postgres-exporter.deb
