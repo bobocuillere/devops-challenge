@@ -29,6 +29,9 @@ jobs:
             -t prometheus-postgres-exporter:buster \
             .
           docker run --rm -v ${{ github.workspace }}/deb_build:/workspace/deb_build prometheus-postgres-exporter:buster
+          
+      - name: Check deb_build directory
+        run: ls -R deb_build # This will show the contents of deb_build to confirm the file is there
 
       - name: Upload .deb Artifact for buster
         uses: actions/upload-artifact@v3
@@ -56,6 +59,9 @@ jobs:
             -t prometheus-postgres-exporter:bullseye \
             .
           docker run --rm -v ${{ github.workspace }}/deb_build:/workspace/deb_build prometheus-postgres-exporter:bullseye
+          
+      - name: Check deb_build directory
+        run: ls -R deb_build
 
       - name: Upload .deb Artifact for bullseye
         uses: actions/upload-artifact@v3
@@ -83,11 +89,12 @@ jobs:
             -t prometheus-postgres-exporter:bookworm \
             .
           docker run --rm -v ${{ github.workspace }}/deb_build:/workspace/deb_build prometheus-postgres-exporter:bookworm
+          
+      - name: Check deb_build directory
+        run: ls -R deb_build
 
       - name: Upload .deb Artifact for bookworm
         uses: actions/upload-artifact@v3
         with:
           name: prometheus-postgres-exporter-bookworm.deb
           path: deb_build/prometheus-postgres-exporter.deb
-
-          
