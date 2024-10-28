@@ -27,17 +27,21 @@ jobs:
 
       - name: Build Docker image and create .deb package for ${{ matrix.debian_version }}
         run: |
-          # Ensure the deb_build directory exists in the runner
-          mkdir -p deb_build
-          # Build and run the Docker container
+          # Build the Docker image
           docker build \
             --file docker/Dockerfile \
             --build-arg DEBIAN_VERSION=${{ matrix.debian_version }} \
             -t prometheus-postgres-exporter:${{ matrix.debian_version }} \
             .
-          docker run --rm \
-            -v ${{ github.workspace }}/deb_build:/workspace/deb_build \
-            prometheus-postgres-exporter:${{ matrix.debian_version }}
+
+          # Create a container from the image
+          docker create --name temp_container_${{ matrix.debian_version }} prometheus-postgres-exporter:${{ matrix.debian_version }}
+
+          # Copy the .deb file from the container to the runner's filesystem
+          docker cp temp_container_${{ matrix.debian_version }}:/workspace/deb_build/prometheus-postgres-exporter.deb ./deb_build/
+
+          # Remove the temporary container
+          docker rm temp_container_${{ matrix.debian_version }}
 
       - name: Check deb_build directory contents
         run: ls -R deb_build # Confirm the .deb file is in this directory
