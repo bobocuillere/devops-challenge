@@ -89,3 +89,5 @@ jobs:
         with:
           name: prometheus-postgres-exporter-bookworm.deb
           path: deb_build/prometheus-postgres-exporter.deb
+
+          
