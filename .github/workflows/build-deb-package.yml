@@ -28,13 +28,13 @@ jobs:
             --build-arg DEBIAN_VERSION=buster \
             -t prometheus-postgres-exporter:buster \
             .
-          docker run --rm -v ${{ github.workspace }}:/workspace prometheus-postgres-exporter:buster
+          docker run --rm -v ${{ github.workspace }}/deb_build:/workspace/deb_build prometheus-postgres-exporter:buster
 
       - name: Upload .deb Artifact for buster
         uses: actions/upload-artifact@v3
         with:
           name: prometheus-postgres-exporter-buster.deb
-          path: ./deb_build/prometheus-postgres-exporter.deb
+          path: deb_build/prometheus-postgres-exporter.deb
 
   build-bullseye:
     runs-on: ubuntu-latest
@@ -55,13 +55,13 @@ jobs:
             --build-arg DEBIAN_VERSION=bullseye \
             -t prometheus-postgres-exporter:bullseye \
             .
-          docker run --rm -v ${{ github.workspace }}:/workspace prometheus-postgres-exporter:bullseye
+          docker run --rm -v ${{ github.workspace }}/deb_build:/workspace/deb_build prometheus-postgres-exporter:bullseye
 
       - name: Upload .deb Artifact for bullseye
         uses: actions/upload-artifact@v3
         with:
           name: prometheus-postgres-exporter-bullseye.deb
-          path: ./deb_build/prometheus-postgres-exporter.deb
+          path: deb_build/prometheus-postgres-exporter.deb
 
   build-bookworm:
     runs-on: ubuntu-latest
@@ -82,10 +82,10 @@ jobs:
             --build-arg DEBIAN_VERSION=bookworm \
             -t prometheus-postgres-exporter:bookworm \
             .
-          docker run --rm -v ${{ github.workspace }}:/workspace prometheus-postgres-exporter:bookworm
+          docker run --rm -v ${{ github.workspace }}/deb_build:/workspace/deb_build prometheus-postgres-exporter:bookworm
 
       - name: Upload .deb Artifact for bookworm
         uses: actions/upload-artifact@v3
         with:
           name: prometheus-postgres-exporter-bookworm.deb
-          path: ./deb_build/prometheus-postgres-exporter.deb
+          path: deb_build/prometheus-postgres-exporter.deb
