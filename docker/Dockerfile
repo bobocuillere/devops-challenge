@@ -19,5 +19,6 @@ RUN wget https://github.com/prometheus-community/postgres_exporter/releases/down
     tar -xzvf postgres_exporter-${EXPORTER_VERSION}.${ARCHITECTURE}.tar.gz && \
     mv postgres_exporter-${EXPORTER_VERSION}.${ARCHITECTURE}/postgres_exporter /usr/local/bin/
 
-# Build the .deb package
-CMD dpkg-deb --build /build prometheus-postgres-exporter.deb
+# Build the .deb package and place it in a known location
+RUN mkdir -p /workspace/deb_build && \
+    dpkg-deb --build /build /workspace/deb_build/prometheus-postgres-exporter.deb
