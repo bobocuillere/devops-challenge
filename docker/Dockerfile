@@ -24,7 +24,7 @@ RUN mkdir -p /build/DEBIAN && \
     echo "Package: prometheus-postgres-exporter" > /build/DEBIAN/control && \
     echo "Version: ${EXPORTER_VERSION}" >> /build/DEBIAN/control && \
     echo "Architecture: amd64" >> /build/DEBIAN/control && \
-    echo "Maintainer: Sophnel  <sophnel.merzier@sinch.com>" >> /build/DEBIAN/control && \
+    echo "Maintainer: Sophnel <sophnel.merzier@sinch.com>" >> /build/DEBIAN/control && \
     echo "Description: Prometheus exporter for PostgreSQL metrics" >> /build/DEBIAN/control
 
 # Build the .deb package and place it in a known location

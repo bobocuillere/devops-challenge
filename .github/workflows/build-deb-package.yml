@@ -9,8 +9,12 @@ on:
       - main
 
 jobs:
-  build-buster:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        debian_version: [buster, bullseye, bookworm]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -21,80 +25,25 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
-      - name: Build Docker image and create .deb for Debian buster
+      - name: Build Docker image and create .deb package for ${{ matrix.debian_version }}
         run: |
+          # Ensure the deb_build directory exists in the runner
+          mkdir -p deb_build
+          # Build and run the Docker container
           docker build \
             --file docker/Dockerfile \
-            --build-arg DEBIAN_VERSION=buster \
-            -t prometheus-postgres-exporter:buster \
+            --build-arg DEBIAN_VERSION=${{ matrix.debian_version }} \
+            -t prometheus-postgres-exporter:${{ matrix.debian_version }} \
             .
-          docker run --rm -v ${{ github.workspace }}/deb_build:/workspace/deb_build prometheus-postgres-exporter:buster
-          
-      - name: Check deb_build directory
-        run: ls -R deb_build # This will show the contents of deb_build to confirm the file is there
+          docker run --rm \
+            -v ${{ github.workspace }}/deb_build:/workspace/deb_build \
+            prometheus-postgres-exporter:${{ matrix.debian_version }}
 
-      - name: Upload .deb Artifact for buster
+      - name: Check deb_build directory contents
+        run: ls -R deb_build # Confirm the .deb file is in this directory
+
+      - name: Upload .deb Artifact for ${{ matrix.debian_version }}
         uses: actions/upload-artifact@v3
         with:
-          name: prometheus-postgres-exporter-buster.deb
-          path: deb_build/prometheus-postgres-exporter.deb
-
-  build-bullseye:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Build Docker image and create .deb for Debian bullseye
-        run: |
-          docker build \
-            --file docker/Dockerfile \
-            --build-arg DEBIAN_VERSION=bullseye \
-            -t prometheus-postgres-exporter:bullseye \
-            .
-          docker run --rm -v ${{ github.workspace }}/deb_build:/workspace/deb_build prometheus-postgres-exporter:bullseye
-          
-      - name: Check deb_build directory
-        run: ls -R deb_build
-
-      - name: Upload .deb Artifact for bullseye
-        uses: actions/upload-artifact@v3
-        with:
-          name: prometheus-postgres-exporter-bullseye.deb
-          path: deb_build/prometheus-postgres-exporter.deb
-
-  build-bookworm:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Build Docker image and create .deb for Debian bookworm
-        run: |
-          docker build \
-            --file docker/Dockerfile \
-            --build-arg DEBIAN_VERSION=bookworm \
-            -t prometheus-postgres-exporter:bookworm \
-            .
-          docker run --rm -v ${{ github.workspace }}/deb_build:/workspace/deb_build prometheus-postgres-exporter:bookworm
-          
-      - name: Check deb_build directory
-        run: ls -R deb_build
-
-      - name: Upload .deb Artifact for bookworm
-        uses: actions/upload-artifact@v3
-        with:
-          name: prometheus-postgres-exporter-bookworm.deb
+          name: prometheus-postgres-exporter-${{ matrix.debian_version }}.deb
           path: deb_build/prometheus-postgres-exporter.deb
