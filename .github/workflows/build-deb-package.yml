@@ -25,6 +25,10 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
+      - name: Prepare deb_build directory
+        # Ensure the local deb_build directory exists on the runner
+        run: mkdir -p deb_build
+
       - name: Build Docker image and create .deb package for ${{ matrix.debian_version }}
         run: |
           # Build the Docker image
